@@ -133,6 +133,8 @@ int main() {
 	std::string line = "";
 	int index = 0;
 	// read the .csv file and fill up pokemon array
+	// skip the first line
+	std::getline(file, line);
 	while (std::getline(file, line)) {
 		int ID;
 		std::string name;
@@ -201,17 +203,18 @@ int main() {
 	}
 
 	// generates 6 random pokemon and prints their stats
-	srand(time(NULL));
+	srand(time(0));
 	for (int i = 0; i < 6; i++) {
-		int randNum = rand() % 100;
+		int randNum = rand() % 200;
 		pokemon[randNum].printStats();
 	}
-
+	
 	/* prints out all the pokemon in database
 	for (int i = 0; i < index; i++) {
 		pokemon[i].printStats();
 	}
 	*/
+	
 
 	// clear pokemon array memory
 	delete[] pokemon;
