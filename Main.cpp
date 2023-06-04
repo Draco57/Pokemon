@@ -28,6 +28,7 @@ public:
 	std::string ability;
 
 public:
+	// default constuctor for Pokemon
 	Pokemon() {
 		id = 0;
 		name = "Pokemon";
@@ -43,6 +44,7 @@ public:
 		ability = "Run Away";
 	}
 
+	// custom constructor for Pokemon
 	Pokemon(int id, std::string name, Type primary, Type secondary, int HP, int ATK, int DEF, int SPATK, int SPDEF, int SPD, float weight) {
 		this->id = id;
 		this->name = name;
@@ -57,6 +59,7 @@ public:
 		this->weight = weight;
 	}
 
+	// converts the enums into string type
 	std::string typeString(Type type) {
 		switch (type) {
 		case 1:
@@ -99,8 +102,8 @@ public:
 			return "None";
 		}
 	}
-	//NEUTRAL, FIRE, WATER, GRASS, ELECTRIC, ICE, STEEL, DARK, GHOST, DRAGON, FAIRY, GROUND, ROCK, NORMAL, BUG, PSYCHIC, FLYING, POISON, FIGHTING
-
+	
+	//print out stats of Pokemon
 	void printStats() {
 		std::cout << name << std::endl;
 		std::cout << "Type: " << typeString(primary) << "/" << typeString(secondary) << std::endl;
@@ -119,7 +122,9 @@ int main() {
 
 	std::string myFilePath = "PokeDB.csv";
 	std::ifstream file(myFilePath);
-	Pokemon *pokemon= new Pokemon[MAX_LINES];
+	Pokemon* pokemon = new Pokemon[MAX_LINES];
+
+	// checks if file read failed
 	if (file.fail()) {
 		std::cerr << "Unable to open file: " << myFilePath << std::endl;
 		return 1;
@@ -127,6 +132,7 @@ int main() {
 
 	std::string line = "";
 	int index = 0;
+	// read the .csv file and fill up pokemon array
 	while (std::getline(file, line)) {
 		int ID;
 		std::string name;
@@ -147,7 +153,7 @@ int main() {
 		tempString = "";
 
 		getline(inputString, name, ',');
-		
+
 		getline(inputString, tempString, ',');
 		primary = getType(tempString);
 		tempString = "";
@@ -185,23 +191,34 @@ int main() {
 		tempString = "";
 
 		getline(inputString, tempString, ',');
-		weight = (float) atof(tempString.c_str());
+		weight = (float)atof(tempString.c_str());
 		tempString = "";
 
 		Pokemon tempPokemon(ID, name, primary, secondary, HP, ATK, DEF, SPATK, SPDEF, SPD, weight);
 		pokemon[index] = tempPokemon;
 		index++;
-		
+
 	}
-	
+
+	// generates 6 random pokemon and prints their stats
+	srand(time(NULL));
+	for (int i = 0; i < 6; i++) {
+		int randNum = rand() % 100;
+		pokemon[randNum].printStats();
+	}
+
+	/* prints out all the pokemon in database
 	for (int i = 0; i < index; i++) {
 		pokemon[i].printStats();
 	}
+	*/
 
+	// clear pokemon array memory
 	delete[] pokemon;
 	return 0;
 }
 
+// converts a string Pokemon Type to the enum type
 Type getType(std::string type) {
 	if (type.compare("Fire") == 0) {
 		return FIRE;
