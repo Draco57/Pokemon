@@ -5,12 +5,11 @@
 
 #define PRINT(X) std::cout << X << std::endl;
 #define MAX_LINES 2000
+#define TOTAL 1195
 
 enum Type {
 	NEUTRAL, FIRE, WATER, GRASS, ELECTRIC, ICE, STEEL, DARK, GHOST, DRAGON, FAIRY, GROUND, ROCK, NORMAL, BUG, PSYCHIC, FLYING, POISON, FIGHTING
 };
-
-Type getType(std::string type);
 
 class Pokemon {
 	
@@ -118,6 +117,10 @@ public:
 	}
 };
 
+Type getType(std::string type);
+void generateRandomPokemon(Pokemon* pokemon);
+void printAllPokemon(Pokemon* pokemon);
+
 int main() {
 
 	std::string myFilePath = "PokeDB.csv";
@@ -202,25 +205,33 @@ int main() {
 
 	}
 
-	// generates 6 random pokemon and prints their stats
-	srand(time(0));
-	for (int i = 0; i < 6; i++) {
-		int randNum = rand() % 200;
-		pokemon[randNum].printStats();
-	}
-	
-	/* prints out all the pokemon in database
-	for (int i = 0; i < index; i++) {
-		pokemon[i].printStats();
-	}
-	*/
-	
+
+	//generateRandomPokemon(pokemon);
+	printAllPokemon(pokemon);
 
 	// clear pokemon array memory
 	delete[] pokemon;
 	return 0;
 }
 
+//print stats of n random pokemon
+void generateRandomPokemon(Pokemon* pokemon) {
+	int n = 0;
+	std::cout << "How many random Pokemon do you want to generate: " << std::endl;
+	std::cin >> n;
+	srand(time(0));
+	for (int i = 0; i < n; i++) {
+		int randNum = rand() % TOTAL;
+		pokemon[randNum].printStats();
+	}
+}
+
+//print all pokemon in DB
+void printAllPokemon(Pokemon* pokemon) {
+	for (int i = 0; i < TOTAL; i++) {
+		pokemon[i].printStats();
+	}
+}
 // converts a string Pokemon Type to the enum type
 Type getType(std::string type) {
 	if (type.compare("Fire") == 0) {
