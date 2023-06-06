@@ -3,7 +3,8 @@
 #include <fstream>
 #include <sstream>
 
-#define PRINT(X) std::cout << X << std::endl;
+#define PRINT(X) std::cout << X << " ";
+#define PRINTLN(X) std::cout << X << std::endl;
 #define MAX_LINES 2000
 #define TOTAL 1195
 
@@ -44,9 +45,10 @@ public:
 	}
 
 	// custom constructor for Pokemon
-	Pokemon(int id, std::string name, Type primary, Type secondary, int HP, int ATK, int DEF, int SPATK, int SPDEF, int SPD, float weight) {
+	Pokemon(int id, std::string name, std::string ability, Type primary, Type secondary, int HP, int ATK, int DEF, int SPATK, int SPDEF, int SPD, float weight) {
 		this->id = id;
 		this->name = name;
+		this->ability = ability;
 		this->primary = primary;
 		this->secondary = secondary;
 		this->HP = HP;
@@ -105,7 +107,13 @@ public:
 	//print out stats of Pokemon
 	void printStats() {
 		std::cout << name << std::endl;
-		std::cout << "Type: " << typeString(primary) << "/" << typeString(secondary) << std::endl;
+		if (typeString(secondary).compare("None") == 0) {
+			std::cout << "Type: " << typeString(primary) << std::endl;
+		}
+		else {
+			std::cout << "Type: " << typeString(primary) << "/" << typeString(secondary) << std::endl;
+		}
+		std::cout << "Ability: " << ability << std::endl;
 		std::cout << "HP: " << HP << std::endl;
 		std::cout << "ATK: " << ATK << std::endl;
 		std::cout << "DEF: " << DEF << std::endl;
@@ -120,9 +128,22 @@ public:
 Type getType(std::string type);
 void generateRandomPokemon(Pokemon* pokemon);
 void printAllPokemon(Pokemon* pokemon);
+Pokemon* loadPokemon();
 
 int main() {
 
+	Pokemon* pokemon = loadPokemon();
+
+	generateRandomPokemon(pokemon);
+	//printAllPokemon(pokemon);
+ 
+	// clear pokemon array memory
+	delete[] pokemon;
+	return 0;
+}
+
+// loads pokemon from csv file
+Pokemon* loadPokemon() {
 	std::string myFilePath = "PokeDB.csv";
 	std::ifstream file(myFilePath);
 	Pokemon* pokemon = new Pokemon[MAX_LINES];
@@ -130,17 +151,18 @@ int main() {
 	// checks if file read failed
 	if (file.fail()) {
 		std::cerr << "Unable to open file: " << myFilePath << std::endl;
-		return 1;
 	}
 
 	std::string line = "";
 	int index = 0;
+	srand(time(0));
 	// read the .csv file and fill up pokemon array
 	// skip the first line
 	std::getline(file, line);
 	while (std::getline(file, line)) {
 		int ID;
 		std::string name;
+		std::string ability;
 		Type primary, secondary;
 		int HP;
 		int ATK;
@@ -199,27 +221,40 @@ int main() {
 		weight = (float)atof(tempString.c_str());
 		tempString = "";
 
-		Pokemon tempPokemon(ID, name, primary, secondary, HP, ATK, DEF, SPATK, SPDEF, SPD, weight);
+		//getline(inputString, ability);
+		std::string ability1 = "", ability2 = "", hidden = "";
+
+		getline(inputString, ability1, ',');
+		getline(inputString, ability2, ',');
+		getline(inputString, hidden, ',');
+
+		// generate random ability from legal abilities
+		if (hidden.size() == 0 && ability2.size() == 0) {
+			ability = ability1;
+		}
+		else if (ability2.size() == 0) {
+			int randNum = rand() % 2;
+			ability = randNum == 0 ? ability1 : hidden;
+		}
+		else {
+			int randNum = rand() % 3;
+			ability = randNum == 0 ? ability1 : (randNum == 1 ? ability2 : hidden);
+		}
+
+		Pokemon tempPokemon(ID, name, ability, primary, secondary, HP, ATK, DEF, SPATK, SPDEF, SPD, weight);
 		pokemon[index] = tempPokemon;
 		index++;
-
 	}
-
-
-	//generateRandomPokemon(pokemon);
-	printAllPokemon(pokemon);
-
-	// clear pokemon array memory
-	delete[] pokemon;
-	return 0;
+	return pokemon;
 }
 
 //print stats of n random pokemon
 void generateRandomPokemon(Pokemon* pokemon) {
 	int n = 0;
 	std::cout << "How many random Pokemon do you want to generate: " << std::endl;
+
 	std::cin >> n;
-	srand(time(0));
+	//srand(time(0));
 	for (int i = 0; i < n; i++) {
 		int randNum = rand() % TOTAL;
 		pokemon[randNum].printStats();
