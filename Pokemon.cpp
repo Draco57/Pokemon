@@ -96,3 +96,114 @@
 		std::cout << "Weighs " << weight << " kgs." << std::endl;
 		std::cout << std::endl;
 	}
+
+	void Pokemon::changeStatusMB(Status status) {
+		if (currentStatus == HEALTHY) {
+			if (status == BURN && (primary != FIRE && secondary != FIRE)) {
+				currentStatus = status;
+				return;
+			}
+			if (status == PARALYSIS && (primary != ELECTRIC && secondary != ELECTRIC)) {
+				currentStatus = status;
+				return;
+			}
+			if (status == FREEZE && (primary != ICE && secondary != ICE)) {
+				currentStatus = status;
+				return;
+			}
+			if (status == POISONED && ((primary != POISON && secondary != POISON) && (primary != STEEL && secondary != STEEL))) {
+				currentStatus = status;
+				return;
+			}
+			if (status == BAD_POISONED && ((primary != POISON && secondary != POISON) && (primary != STEEL && secondary != STEEL))) {
+				currentStatus = status;
+				return;
+			}
+			currentStatus = status;
+		}	
+	}
+
+	void Pokemon::addVolatileStatusMB(V_Status status) {
+		// ghost types cannot be trapped
+		if (status == TRAPPED && (primary != GHOST && secondary != GHOST)) {
+			volStatus.insert(status);
+			return;
+		}
+		if (status == TELEKINESIS && (volStatus.find(GROUNDED) == volStatus.end())) {
+			volStatus.insert(status);
+			return;
+		}
+		if (status == SEEDED && (primary != GRASS && secondary != GRASS)) {
+			volStatus.insert(status);
+			return;
+		}
+		if (!(status != SEEDED || status == TELEKINESIS || status == TRAPPED)) {
+			volStatus.insert(status);
+			return;
+		}
+		std::cout << name << " is not affected!";
+	}
+	// Handle type change seperately from other volatile status
+
+	void Pokemon::addBattleStatus(B_Status status) {
+		battleStatus.insert(status);
+	}
+
+	void Pokemon::changeStatus(Status status) {
+		// Comatose and Purifying Salt mons cannot be statused
+		if (currentStatus == HEALTHY || ability.compare("Comatose") == 0 || ability.compare("Purifying Salt")) {
+			if (status == BURN && (primary != FIRE && secondary != FIRE)) {
+				// Water Veil and Water Bubble Mons cannot be burned
+				if (ability.compare("Water Veil") != 0 && ability.compare("Water Bubble")) {
+					currentStatus = status;
+				}
+				return;
+			}
+			if (status == PARALYSIS && (primary != ELECTRIC && secondary != ELECTRIC)) {
+				// Limber mons cannot be paralyzed
+				if (ability.compare("Limber") != 0) {
+					currentStatus = status;
+				}
+				return;
+			}
+			if (status == FREEZE && (primary != ICE && secondary != ICE)) {
+				// Magma armor mons cannot be frozen
+				if (ability.compare("Magma Armor") != 0) {
+					currentStatus = status;
+				}
+				return;
+			}
+			if (status == POISONED && ((primary != POISON && secondary != POISON) && (primary != STEEL && secondary != STEEL))) {
+				// Immunity mons cannot be poisoned
+				if (ability.compare("Immunity") != 0) {
+					currentStatus = status;
+				}
+				return;
+			}
+			if (status == BAD_POISONED && ((primary != POISON && secondary != POISON) && (primary != STEEL && secondary != STEEL))) {
+				// Immunity mons cannot be badly poisoned
+				if (ability.compare("Immunity") != 0) {
+					currentStatus = status;
+				}
+				return;
+			}
+			// Insomnia mons cannot be slept
+			if (status == SLEEP && ability.compare("Insomnia") != 0) {
+				currentStatus = status;
+			}
+		}
+		std::cout << name << " is not affected!";
+	}
+
+	void Pokemon::addVolatileStatus(V_Status status) {
+		// ghost types cannot be trapped
+		if (status == TRAPPED && (primary != GHOST && secondary != GHOST)) {
+			volStatus.insert(status);
+			return;
+		}
+		if (status == TELEKINESIS && (volStatus.find(GROUNDED) == volStatus.end())) {
+			volStatus.insert(status);
+			return;
+		}
+		volStatus.insert(status);
+	}

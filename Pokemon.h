@@ -1,12 +1,13 @@
 #include <string>
-#pragma once
-enum Type {
-	NEUTRAL, FIRE, WATER, GRASS, ELECTRIC, ICE, STEEL, DARK, GHOST, DRAGON, FAIRY, GROUND, ROCK, NORMAL, BUG, PSYCHIC, FLYING, POISON, FIGHTING
-};
+#include <unordered_set>
+#include "Attack.h"
+#include "Type.h"
+#include "Status.h"
 
+#pragma once
 class Pokemon
 {
-public:
+private:
 	int id;
 	std::string name;
 	Type primary, secondary;
@@ -18,6 +19,17 @@ public:
 	int SPD;
 	float weight;
 	std::string ability;
+
+// battle attributes
+public:
+	int currentHP;
+	Attack attack1;
+	Attack attack2;
+	Attack attack3;
+	Attack attack4;
+	Status currentStatus;
+	std::unordered_set<V_Status> volStatus;
+	std::unordered_set<B_Status> battleStatus;
 
 public:
 	// default constuctor for Pokemon
@@ -31,5 +43,16 @@ public:
 
 	//print out stats of Pokemon
 	void printStats();
+
+// battle methods
+public:
+
+	void changeStatus(Status status);
+	void addVolatileStatus(V_Status status);
+	void addBattleStatus(B_Status status);
+
+	// mold breaker/teravolt/turboblze case
+	void changeStatusMB(Status status);
+	void addVolatileStatusMB(V_Status status);
 };
 

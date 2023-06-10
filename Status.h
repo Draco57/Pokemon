@@ -9,7 +9,7 @@
 // Purifying Salt mons cannot be statused
 
 enum Status {
-	BURN, FREEZE, PARALYSIS, POISON, BAD_POISON, SLEEP
+	HEALTHY, BURN, FREEZE, PARALYSIS, POISONED, BAD_POISONED, SLEEP
 };
 
 // volatile status (gone on switch or X number of turns)
@@ -19,6 +19,11 @@ enum Status {
 // Inner Focus mons cannot be flinched, Steadfast mons get +1 speed when flinched
 // Oblivious mons cannot be taunted, charmed, or intimidated
 // Own Tempo mons cannot be confused or intimidated
+// *EXTRA ABILITY CHANGE/REMOVE*
+/* Gastro Acid fails if the target's Ability is Multitype, Stance Change, Schooling, Comatose, 
+Shields Down, Disguise, RKS System, Battle Bond, Power Construct, Ice Face, Gulp Missile, As One, 
+Zero to Hero, Commander, Quark Drive, or Protosynthesis.
+*/
 
 enum V_Status {
 	BOUND, TRAPPED, CONFUSION, CHANGE_ABILITY, REMOVE_ABILITY, CURSE, DROWSY, EMBARGO, ENCORE, FLINCH, GROUNDED, HEAL_BLOCK, 
